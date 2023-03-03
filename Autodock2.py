@@ -24,7 +24,7 @@ def dock_vina(receptor_file, ligand_file):
 
 root_dir = "/Users/yashravipati/Downloads/PDBBind_processed"
 
-struct = "6s9c"
+struct = "6s9w"
 
 dock_vina("/Users/yashravipati/Downloads/PDBBind_processed/" + struct + "/" + struct + "_protein_processed.pdb.pdbqt", "/Users/yashravipati/Downloads/PDBBind_processed/" + struct + "/" + struct + "_ligand.mol2.pdbqt")
 
