@@ -32,12 +32,14 @@ import os
 import subprocess
 from vina import Vina
 
+os.system("start vina.exe")
 v = Vina(sf_name='vina', cpu = 2, seed = 12345)
 
 def dock_vina(receptor_file, ligand_file):
+    subprocess.run( ["bash", "pdtqtconverter.bash", # Fill in file name param])
     v.set_receptor(receptor_file)
     v.set_ligand_from_file(ligand_file)
-    v.compute_vina_maps(center=center_of_mass(), box_size=[100, 100, 100])
+    v.compute_vina_maps(center=center_of_mass(), box_size=[20, 20, 20])
     v.dock(exhaustiveness=32, n_poses=1, max_evals=1000000000)
     v.write_poses(ligand_file[:len("/Users/yashravipati/Downloads/PDBBind_processed/") + 9] + "_docked.pdbqt", n_poses=1, overwrite=True)
 
@@ -52,6 +54,8 @@ def center_of_mass(pdbfile, include='ATOM,HETATM'):
     center = [None, None, None]
     include = tuple(include.split(','))
     
+    # Issue: not sure if this works with pdbqt or just pdb files to read in coordinates;
+    # If pdb, then after this we can run the bash script to convert a file to pdbqt
     with open(pdbfile, 'r') as pdb:
 
         # extract coordinates [ [x1,y1,z1], [x2,y2,z2], ... ]
@@ -80,12 +84,13 @@ def center_of_mass(pdbfile, include='ATOM,HETATM'):
         center_rounded = [round(center[i], 3) for i in range(3)]
         return center_rounded
 
-
-root_dir = "/Users/yashravipati/Downloads/PDBBind_processed"
-
-struct = "7kme"
-
-if __name__ == "__main__":
-    dock_vina("/Users/yashravipati/Downloads/PDBBind_processed/" + struct + "/" + struct + "_protein_processed.pdb.pdbqt",
-              "/Users/yashravipati/Downloads/PDBBind_processed/" + struct + "/" + struct + "_ligand.mol2.pdbqt")
-
+def main():
+    # Idea: Create a GUI that would take in a certain file of ligands instead of having these two variables preset by a user
+    root_dir = "/Users/yashravipati/Downloads/PDBBind_processed"
+    struct = ""
+    while (struct != "exit"):
+        struct = input("Enter the ligand here (type exit to stop): ")
+        dock_vina("/Users/yashravipati/Downloads/PDBBind_processed/%s/%s_protein_processed.pdb.pdbqt",
+              "/Users/yashravipati/Downloads/PDBBind_processed/%s/%s_ligand.mol2.pdbqt", struct, struct, struct, struct)
+        
+if __name__ == "__main__": main()
