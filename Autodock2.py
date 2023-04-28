@@ -31,12 +31,13 @@ ATOMIC_WEIGHTS = {'H':1.008, 'HE':4.002602, 'LI':6.94, 'BE':9.012182,
 import os
 import subprocess
 from vina import Vina
+import sys
 
 os.system("start vina.exe")
 v = Vina(sf_name='vina', cpu = 2, seed = 12345)
 
 def dock_vina(receptor_file, ligand_file):
-    subprocess.run( ["bash", "pdtqtconverter.bash", # Fill in file name param])
+    subprocess.run( ["bash", "pdtqtconverter.bash", sys.argv[1]])
     v.set_receptor(receptor_file)
     v.set_ligand_from_file(ligand_file)
     v.compute_vina_maps(center=center_of_mass(), box_size=[20, 20, 20])
@@ -87,7 +88,9 @@ def center_of_mass(pdbfile, include='ATOM,HETATM'):
 def main():
     # Idea: Create a GUI that would take in a certain file of ligands instead of having these two variables preset by a user
     root_dir = "/Users/yashravipati/Downloads/PDBBind_processed"
+    # Currently just takes in a file name that the user specifies
     struct = ""
+    # Type exit to stop docking ligands
     while (struct != "exit"):
         struct = input("Enter the ligand here (type exit to stop): ")
         dock_vina("/Users/yashravipati/Downloads/PDBBind_processed/%s/%s_protein_processed.pdb.pdbqt",
