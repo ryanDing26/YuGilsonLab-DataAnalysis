@@ -7,7 +7,6 @@ from rdkit.Chem.Crippen import MolLogP
 from rdkit.Chem import MolFromSmiles, QED
 from rdkit.Chem import AllChem
 # Synthetic Accessibility Scorer
-from sascorer import calculateScore
 import numpy as np
 import time
 import math

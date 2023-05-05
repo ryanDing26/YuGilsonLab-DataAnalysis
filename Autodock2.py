@@ -36,11 +36,11 @@ import sys
 os.system("start vina.exe")
 v = Vina(sf_name='vina', cpu = 2, seed = 12345)
 
-def dock_vina(receptor_file, ligand_file):
+def dock_vina(struct, receptor_file, ligand_file, ):
     subprocess.run( ["bash", "pdtqtconverter.bash", sys.argv[1]])
     v.set_receptor(receptor_file)
     v.set_ligand_from_file(ligand_file)
-    v.compute_vina_maps(center=center_of_mass(), box_size=[20, 20, 20])
+    v.compute_vina_maps(center=center_of_mass("/Users/yashravipati/Downloads/PDBBind_processed/%s/%s_protein_processed.pdb", struct, struct), box_size=[20, 20, 20])
     v.dock(exhaustiveness=32, n_poses=1, max_evals=1000000000)
     v.write_poses(ligand_file[:len("/Users/yashravipati/Downloads/PDBBind_processed/") + 9] + "_docked.pdbqt", n_poses=1, overwrite=True)
 
